@@ -1,1 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="theme-color" content="#f6f9ff" id="metaTheme">
+  <title>MOSTAKIM AI — Smarter • Faster • For You</title>
+  <meta name="description" content="MOSTAKIM AI Assistant: chat with AI or search the web. Get answers, explore ideas and make your life easier.">
+  <link rel="icon" type="image/png" href="/image/mostakim.ai.png">
+  <link rel="apple-touch-icon" href="/image/mostakim.ai.png">
+  <link rel="stylesheet" href="/style.css">
+  <script nonce="__CSP_NONCE__">
+    /* apply the saved theme before first paint (no flash) */
+    (function () {
+      try {
+        var t = localStorage.getItem('mai.theme');
+        if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    })();
+  </script>
+  <script src="/setting.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="bg-deco" aria-hidden="true"></div>
 
+  <div class="app" id="app">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:6px;min-width:0">
+        <button class="iconbtn back" id="btnBack" type="button" aria-label="Back to home" hidden><span data-icon="back"></span></button>
+        <a class="brand" href="/" data-route="home" aria-label="MOSTAKIM AI home">
+          <span class="logo-crop"><img src="/image/mostakim.ai.png" alt="MOSTAKIM AI logo" width="1254" height="1254" decoding="async"></span>
+          <span class="brand-text">
+            <span class="brand-name">MOSTAKIM <b>AI</b></span>
+            <span class="brand-tag" id="brandTag">Smarter • Faster • For You</span>
+          </span>
+        </a>
+      </div>
+      <div class="top-actions">
+        <button class="iconbtn" id="btnNew" type="button" aria-label="Start a new chat" hidden><span data-icon="newchat"></span></button>
+        <button class="iconbtn" id="btnTheme" type="button" aria-label="Switch to dark mode" aria-pressed="false"></button>
+        <button class="iconbtn soft" id="btnMenu" type="button" aria-label="Open menu" aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer"><span data-icon="menu"></span></button>
+      </div>
+    </header>
+
+    <div class="ticker"><marquee id="ticker" scrollamount="5" aria-label="Announcements">Welcome to MOSTAKIM AI • Ask anything • Search the web • Explore more</marquee></div>
+
+    <main id="main" tabindex="-1">
+      <!-- HOME -->
+      <section class="view home" id="view-home" aria-label="Home">
+        <div class="hero">
+          <span class="logo-crop"><img src="/image/mostakim.ai.png" alt="MOSTAKIM AI" width="1254" height="1254" decoding="async"></span>
+          <h1>Hello <span class="name" id="greetName">Chief</span></h1>
+          <p class="sub">What would you like to do today?</p>
+          <p class="desc">Chat with AI or search the web — get answers, explore ideas and make your life easier.</p>
+        </div>
+
+        <nav class="cards" aria-label="Main options">
+          <a class="card card-chat" href="?chat" data-route="chat">
+            <span class="card-ico" aria-hidden="true">
+              <svg viewBox="0 0 64 64"><defs><linearGradient id="gChat" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f9bff"/><stop offset=".55" stop-color="#3a52ff"/><stop offset="1" stop-color="#7a35f5"/></linearGradient></defs>
+                <path d="M32 8C18.7 8 8 17.3 8 28.8c0 6 2.9 11.4 7.6 15.2L13 55l10.4-5.6c2.7.8 5.6 1.2 8.6 1.2 13.3 0 24-9.3 24-20.8S45.3 8 32 8z" fill="url(#gChat)"/>
+                <circle cx="22" cy="29" r="3.2" fill="#fff"/><circle cx="32" cy="29" r="3.2" fill="#fff"/><circle cx="42" cy="29" r="3.2" fill="#fff"/></svg>
+            </span>
+            <span class="card-body"><h2>Chat</h2><p>Ask anything, get instant answers, and explore ideas with AI.</p></span>
+            <span class="card-go" aria-hidden="true"><span data-icon="arrow"></span></span>
+          </a>
+          <a class="card card-search" href="?search" data-route="search">
+            <span class="card-ico" aria-hidden="true">
+              <svg viewBox="0 0 64 64"><defs><linearGradient id="gSearch" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a5cf0"/><stop offset="1" stop-color="#8a3cf0"/></linearGradient></defs>
+                <circle cx="27" cy="27" r="16" fill="none" stroke="url(#gSearch)" stroke-width="7"/>
+                <path d="M39.5 39.5L54 54" stroke="url(#gSearch)" stroke-width="8" stroke-linecap="round"/></svg>
+            </span>
+            <span class="card-body"><h2>Search</h2><p>Find real-time information from the web. Get accurate and up-to-date results.</p></span>
+            <span class="card-go" aria-hidden="true"><span data-icon="arrow"></span></span>
+          </a>
+        </nav>
+
+        <div class="script" aria-hidden="true">
+          <svg class="spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1c.7 5.3 2.9 8.5 11 11-8.1 2.5-10.3 5.7-11 11-.7-5.3-2.9-8.5-11-11C9.1 9.5 11.3 6.3 12 1z"/></svg>
+          <div class="script-text"><span>Better Ideas</span><span>Bigger Possibilities</span></div>
+          <svg class="spark s2" viewBox="0 0 24 24"><path fill="currentColor" d="M12 1c.7 5.3 2.9 8.5 11 11-8.1 2.5-10.3 5.7-11 11-.7-5.3-2.9-8.5-11-11C9.1 9.5 11.3 6.3 12 1z"/></svg>
+        </div>
+      </section>
+
+      <!-- CHAT -->
+      <section class="view" id="view-chat" aria-label="Chat" hidden>
+        <div class="chat-wrap" id="chatWrap" aria-live="polite"></div>
+      </section>
+
+      <!-- SEARCH -->
+      <section class="view" id="view-search" aria-label="Search" hidden>
+        <div class="search-wrap" id="searchWrap"></div>
+      </section>
+    </main>
+
+    <div class="dock on-home" id="dock">
+      <div class="tray" id="tray" role="list" aria-label="Attachments" hidden></div>
+      <form class="composer" id="composer" autocomplete="off">
+        <button type="button" class="cbtn plus" id="btnPlus" aria-label="Add attachment" aria-haspopup="dialog"><span data-icon="plus"></span></button>
+        <textarea id="input" rows="1" placeholder="Ask MOSTAKIM AI..." aria-label="Message" enterkeyhint="send" maxlength="20000"></textarea>
+        <button type="button" class="cbtn mic" id="btnMic" aria-label="Voice input" aria-pressed="false"><span data-icon="mic"></span></button>
+        <button type="submit" class="cbtn send" id="btnSend" aria-label="Send"><span data-icon="send"></span></button>
+        <button type="button" class="cbtn stop" id="btnStop" aria-label="Stop generating" hidden><span data-icon="stop"></span></button>
+      </form>
+    </div>
+
+    <footer class="foot" id="foot">
+      <div class="foot-brand"><span class="logo-crop"><img src="/image/mostakim.ai.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"></span><span>MOSTAKIM <b>AI</b></span></div>
+      <p class="foot-powered" id="poweredBy">Powered by MOSTAKIM LAB'S</p>
+      <div class="ticker ticker-foot"><marquee id="footTicker" scrollamount="3" aria-label="Copyright">© 2026 MOSTAKIM AI • All Rights Reserved • MOSTAKIM LAB'S</marquee></div>
+    </footer>
+  </div>
+
+  <!-- hidden file inputs -->
+  <input type="file" id="inCamera" accept="image/*" capture="environment" hidden>
+  <input type="file" id="inImage" accept="image/png,image/jpeg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif" multiple hidden>
+  <input type="file" id="inFile" accept=".png,.jpg,.jpeg,.webp,.gif,.mp4,.webm,.mov,.mp3,.wav,.m4a,.ogg,.pdf,.txt,.md,.csv,.json,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip" multiple hidden>
+  <input type="file" id="inZip" accept=".zip,application/zip" multiple hidden>
+  <input type="file" id="inVideo" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" multiple hidden>
+  <input type="file" id="inAudio" accept="audio/mpeg,audio/wav,audio/mp4,audio/ogg,.mp3,.wav,.m4a,.ogg" multiple hidden>
+  <input type="file" id="inDoc" accept=".pdf,.txt,.md,.csv,.json,.doc,.docx,.xls,.xlsx,.ppt,.pptx" multiple hidden>
+
+  <!-- menu drawer -->
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-bg" data-close-drawer></div>
+    <div class="drawer-panel" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="drawer-head"><span>Menu</span><button class="iconbtn" type="button" id="btnCloseDrawer" aria-label="Close menu"><span data-icon="close"></span></button></div>
+      <nav class="navlist" aria-label="Navigation">
+        <a class="navitem" href="/" data-route="home" data-nav="home"><span data-icon="home"></span>Home</a>
+        <a class="navitem" href="?chat" data-route="chat" data-nav="chat"><span data-icon="chat"></span>Chat</a>
+        <a class="navitem" href="?search" data-route="search" data-nav="search"><span data-icon="search"></span>Search</a>
+        <button class="navitem" type="button" id="navLibrary"><span data-icon="folder"></span>Media Library</button>
+        <button class="navitem" type="button" id="navTheme"><span data-icon="moon" id="navThemeIcon"></span><span id="navThemeText">Dark mode</span></button>
+      </nav>
+      <h3>Recent chats</h3>
+      <div class="convs" id="convList"></div>
+    </div>
+  </aside>
+
+  <!-- attach menu -->
+  <dialog id="plusDlg" aria-label="Add to message">
+    <div class="dlg-head"><h2>Add to your message</h2><button class="iconbtn" type="button" data-close aria-label="Close"><span data-icon="close"></span></button></div>
+    <div class="dlg-body">
+      <div class="plus-grid">
+        <button type="button" class="plus-item" data-pick="camera"><span class="pi"><span data-icon="camera"></span></span>Camera</button>
+        <button type="button" class="plus-item" data-pick="image"><span class="pi"><span data-icon="image"></span></span>Image</button>
+        <button type="button" class="plus-item" data-pick="file"><span class="pi"><span data-icon="file"></span></span>File</button>
+        <button type="button" class="plus-item" data-pick="zip"><span class="pi"><span data-icon="zip"></span></span>ZIP</button>
+        <button type="button" class="plus-item" data-pick="video"><span class="pi"><span data-icon="video"></span></span>Video</button>
+        <button type="button" class="plus-item" data-pick="audio"><span class="pi"><span data-icon="audio"></span></span>Audio</button>
+        <button type="button" class="plus-item" data-pick="doc"><span class="pi"><span data-icon="doc"></span></span>Document</button>
+      </div>
+      <button type="button" class="plus-lib" id="plusLibrary"><span data-icon="folder"></span>Open Media Library</button>
+    </div>
+  </dialog>
+
+  <!-- media library -->
+  <dialog id="libDlg" class="big" aria-label="Media library">
+    <div class="dlg-head"><h2>Media Library</h2><button class="iconbtn" type="button" data-close aria-label="Close library"><span data-icon="close"></span></button></div>
+    <div class="dlg-body">
+      <div class="lib-bar">
+        <label class="sr-only" for="libFilter">Filter files</label>
+        <select id="libFilter">
+          <option value="all">All files</option><option value="image">Images</option><option value="video">Video</option>
+          <option value="audio">Audio</option><option value="document">Documents</option><option value="text">Text</option><option value="archive">ZIP archives</option>
+        </select>
+        <span class="quota" id="libQuota"></span>
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="libUpload"><span data-icon="plus"></span>Upload</button>
+      </div>
+      <div class="lib-list" id="libList"></div>
+    </div>
+  </dialog>
+
+  <!-- preview -->
+  <dialog id="prevDlg" class="big" aria-label="File preview">
+    <div class="dlg-head"><h2 id="prevTitle">Preview</h2><button class="iconbtn" type="button" data-close aria-label="Close preview"><span data-icon="close"></span></button></div>
+    <div class="dlg-body"><div class="preview-body" id="prevBody"></div><div class="preview-actions" id="prevActions"></div></div>
+  </dialog>
+
+  <!-- camera -->
+  <dialog id="camDlg" aria-label="Camera">
+    <div class="dlg-head"><h2>Take a photo</h2><button class="iconbtn" type="button" data-close aria-label="Close camera"><span data-icon="close"></span></button></div>
+    <div class="dlg-body">
+      <video id="camVideo" class="cam-video" autoplay playsinline muted></video>
+      <div class="cam-actions"><button type="button" class="shutter" id="camShot" aria-label="Capture photo"></button></div>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script nonce="__CSP_NONCE__">
+(() => {
+'use strict';
+
+/* =====================================================================
+   Helpers
+   ===================================================================== */
+const S = Object.assign({
+  appName: 'MOSTAKIM AI', tagline: 'Smarter • Faster • For You', greetingName: 'MOSTAKIM',
+  placeholder: 'Ask MOSTAKIM AI...', searchPlaceholder: 'Search the web...', speechLang: '',
+  maxHistoryMessages: 30, maxConversations: 50, limits: { maxFileSizeMB: 25, maxFiles: 10 }
+}, window.MOSTAKIM_SETTINGS || {});
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v; // only ever used with static icon markup
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const kid of kids.flat()) {
+    if (kid == null || kid === false) continue;
+    e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  }
+  return e;
+}
+
+const ICONS = {
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  newchat: '<path d="M12 20h8"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/>',
+  mic: '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+  send: '<path d="M21 3L10.5 13.5M21 3l-6.5 18-4-7.5L3 9.5z"/>',
+  stop: '<rect x="6" y="6" width="12" height="12" rx="2.5" fill="currentColor" stroke="none"/>',
+  moon: '<path d="M20.5 13.2A8.5 8.5 0 1 1 10.8 3.5a6.8 6.8 0 0 0 9.7 9.7z"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
+  close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  back: '<path d="M15 5l-7 7 7 7"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  copy: '<rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H16"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
+  refresh: '<path d="M20 11a8 8 0 0 0-14.7-3M4 4v4h4M4 13a8 8 0 0 0 14.7 3M20 20v-4h-4"/>',
+  camera: '<path d="M4 8h3l1.8-2.5h6.4L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.8"/>',
+  image: '<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.7"/><path d="M21 16l-5-5-9 9"/>',
+  file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>',
+  zip: '<path d="M3 7h18v4H3zM5 11v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8M10 15h4"/>',
+  video: '<rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3z"/>',
+  audio: '<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  doc: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+  trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>',
+  edit: '<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/>',
+  download: '<path d="M12 4v12M7 11l5 5 5-5M5 20h14"/>',
+  eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  folder: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  chat: '<path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+  home: '<path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/>',
+  alert: '<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/>',
+  paperclip: '<path d="M21 11.5l-8.5 8.5a5.5 5.5 0 0 1-7.8-7.8l9-9a3.7 3.7 0 0 1 5.2 5.2l-9 9a1.8 1.8 0 0 1-2.6-2.6l8.3-8.3"/>'
+};
+const icon = (name) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+const hydrateIcons = (root = document) => $$('[data-icon]', root).forEach((el) => { el.innerHTML = icon(el.dataset.icon); });
+
+function fmtBytes(n) {
+  if (!Number.isFinite(n)) return '';
+  if (n < 1024) return n + ' B';
+  if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+  if (n < 1073741824) return (n / 1048576).toFixed(1) + ' MB';
+  return (n / 1073741824).toFixed(2) + ' GB';
+}
+const fmtDate = (t) => { try { return new Date(t).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }); } catch (_) { return ''; } };
+const extOf = (name) => (String(name).split('.').pop() || '').toLowerCase();
+const kindIcon = (kind, ext) => ({ image: 'image', video: 'video', audio: 'audio', document: 'doc', archive: 'zip', text: 'file' }[kind] || (ext === 'zip' ? 'zip' : 'file'));
+const scrollToEnd = (el) => { el.scrollTop = el.scrollHeight; };
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (_) {
+    try {
+      const ta = h('textarea', { style: 'position:fixed;opacity:0;left:-999px' });
+      ta.value = text; document.body.append(ta); ta.select();
+      const ok = document.execCommand('copy'); ta.remove(); return ok;
+    } catch (_e) { return false; }
+  }
+}
+
+function toast(message, type = '') {
+  const t = h('div', { class: 'toast ' + type, role: type === 'error' ? 'alert' : 'status' }, message);
+  $('#toasts').append(t);
+  setTimeout(() => t.remove(), type === 'error' ? 5200 : 3200);
+}
+
+/* =====================================================================
+   Theme (persisted in localStorage)
+   ===================================================================== */
+function applyTheme(theme, persist) {
+  document.documentElement.setAttribute('data-theme', theme);
+  $('#metaTheme').setAttribute('content', theme === 'dark' ? '#080d1f' : '#f6f9ff');
+  const dark = theme === 'dark';
+  $('#btnTheme').innerHTML = icon(dark ? 'sun' : 'moon');
+  $('#btnTheme').setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  $('#btnTheme').setAttribute('aria-pressed', String(dark));
+  $('#navThemeIcon').innerHTML = icon(dark ? 'sun' : 'moon');
+  $('#navThemeText').textContent = dark ? 'Light mode' : 'Dark mode';
+  if (persist) { try { localStorage.setItem('mai.theme', theme); } catch (_) {} }
+}
+const toggleTheme = () => applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+
+/* =====================================================================
+   Markdown renderer (HTML is escaped first, so output is safe)
+   ===================================================================== */
+function mdInline(src, cites) {
+  let s = esc(src);
+  const codes = [];
+  s = s.replace(/`([^`\n]+)`/g, (_, c) => { codes.push(c); return '\u0000' + (codes.length - 1) + '\u0000'; });
+  s = s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)/g,
+    (_, t, u) => `<a href="${u}" target="_blank" rel="noopener noreferrer nofollow">${t}</a>`);
+  s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>').replace(/__([^_\n]+)__/g, '<strong>$1</strong>');
+  s = s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>').replace(/(^|[\s(])_([^_\n]+)_(?=[\s).,!?:;]|$)/g, '$1<em>$2</em>');
+  s = s.replace(/~~([^~\n]+)~~/g, '<del>$1</del>');
+  s = s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,;:!?])/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer nofollow">$2</a>');
+  if (cites) {
+    s = s.replace(/\[(\d{1,2})\](?!\()/g, (m, n) => (+n >= 1 && +n <= cites
+      ? `<a class="cite" href="#src-${n}" data-cite="${n}" aria-label="Source ${n}">${n}</a>` : m));
+  }
+  return s.replace(/\u0000(\d+)\u0000/g, (_, i) => `<code class="ic">${codes[+i]}</code>`);
+}
+
+function renderList(items) {
+  let out = '';
+  const stack = [];
+  for (const it of items) {
+    while (stack.length && it.level < stack[stack.length - 1].level) out += `</li></${stack.pop().ordered ? 'ol' : 'ul'}>`;
+    if (!stack.length || it.level > stack[stack.length - 1].level) {
+      stack.push({ ordered: it.ordered, level: it.level });
+      out += `<${it.ordered ? 'ol' : 'ul'}><li>${it.html}`;
+    } else out += `</li><li>${it.html}`;
+  }
+  while (stack.length) out += `</li></${stack.pop().ordered ? 'ol' : 'ul'}>`;
+  return out;
+}
+
+function mdBlocks(lines, cites) {
+  let out = '';
+  let i = 0;
+  const isBlank = (l) => !l.trim();
+  const listRe = /^(\s*)([-*+]|\d+[.)])\s+(.*)$/;
+  const startsBlock = (l) => /^(#{1,4})\s/.test(l) || /^\s*>/.test(l) || listRe.test(l) || /^\s*([-*_])\1{2,}\s*$/.test(l);
+  while (i < lines.length) {
+    const line = lines[i];
+    if (isBlank(line)) { i++; continue; }
+    let m;
+    if ((m = /^(#{1,4})\s+(.*)$/.exec(line))) { out += `<h${m[1].length}>${mdInline(m[2], cites)}</h${m[1].length}>`; i++; continue; }
+    if (/^\s*([-*_])\1{2,}\s*$/.test(line)) { out += '<hr>'; i++; continue; }
+    if (/^\s*>/.test(line)) {
+      const q = [];
+      while (i < lines.length && /^\s*>/.test(lines[i])) q.push(lines[i++].replace(/^\s*>\s?/, ''));
+      out += `<blockquote>${mdBlocks(q, cites)}</blockquote>`; continue;
+    }
+    if (line.includes('|') && i + 1 < lines.length && /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(lines[i + 1])) {
+      const cells = (l) => l.trim().replace(/^\||\|$/g, '').split('|').map((c) => c.trim());
+      const head = cells(line); i += 2;
+      const rows = [];
+      while (i < lines.length && lines[i].includes('|') && !isBlank(lines[i])) rows.push(cells(lines[i++]));
+      out += '<div class="tblwrap"><table><thead><tr>' + head.map((c) => `<th>${mdInline(c, cites)}</th>`).join('') + '</tr></thead><tbody>' +
+        rows.map((r) => '<tr>' + head.map((_, k) => `<td>${mdInline(r[k] || '', cites)}</td>`).join('') + '</tr>').join('') + '</tbody></table></div>';
+      continue;
+    }
+    if ((m = listRe.exec(line))) {
+      const items = [];
+      while (i < lines.length && (m = listRe.exec(lines[i]))) {
+        const indent = m[1].replace(/\t/g, '    ').length;
+        items.push({ level: Math.floor(indent / 2), ordered: /\d/.test(m[2]), html: mdInline(m[3], cites) });
+        i++;
+      }
+      out += renderList(items); continue;
+    }
+    const para = [];
+    while (i < lines.length && !isBlank(lines[i]) && (para.length === 0 || !startsBlock(lines[i]))) para.push(lines[i++]);
+    out += `<p>${para.map((l) => mdInline(l, cites)).join('<br>')}</p>`;
+  }
+  return out;
+}
+
+function codeBlockHtml(lang, code) {
+  return `<div class="code"><div class="code-head"><span>${esc(lang || 'code')}</span><button type="button" class="code-copy" data-copy-code aria-label="Copy code">${icon('copy')}<span>Copy</span></button></div><pre><code>${esc(code)}</code></pre></div>`;
+}
+
+function renderMarkdown(text, cites = 0) {
+  const lines = String(text || '').replace(/\r\n?/g, '\n').split('\n');
+  let html = '';
+  let buf = [];
+  let inCode = false, lang = '', code = [];
+  const flush = () => { if (buf.length) { html += mdBlocks(buf, cites); buf = []; } };
+  for (const line of lines) {
+    const fence = /^\s*```\s*([\w+#.-]*)\s*$/.exec(line);
+    if (!inCode && fence) { flush(); inCode = true; lang = fence[1]; code = []; continue; }
+    if (inCode) {
+      if (/^\s*```\s*$/.test(line)) { html += codeBlockHtml(lang, code.join('\n')); inCode = false; } else code.push(line);
+      continue;
+    }
+    buf.push(line);
+  }
+  if (inCode) html += codeBlockHtml(lang, code.join('\n')); // still streaming
+  flush();
+  return html;
+}
+
+/* =====================================================================
+   API client
+   ===================================================================== */
+class ApiError extends Error { constructor(message, status) { super(message); this.status = status; } }
+
+const friendly = (err) => {
+  if (err instanceof ApiError) return err.message;
+  if (err && err.name === 'TypeError') return 'Network error. Please check your connection and try again.';
+  return 'Something went wrong. Please try again.';
+};
+
+async function apiJson(url, opts = {}) {
+  let res;
+  try { res = await fetch(url, { credentials: 'same-origin', ...opts }); } catch (e) { throw new ApiError('Network error. Please check your connection and try again.', 0); }
+  let data = null;
+  try { data = await res.json(); } catch (_) { /* no body */ }
+  if (!res.ok) throw new ApiError((data && data.error && data.error.message) || 'Something went wrong. Please try again.', res.status);
+  return data;
+}
+
+/** POSTs JSON and yields the server-sent events as they arrive (real streaming). */
+async function* streamEvents(url, body, signal) {
+  let res;
+  try {
+    res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal, credentials: 'same-origin' });
+  } catch (e) {
+    if (e.name === 'AbortError') throw e;
+    throw new ApiError('Network error. Please check your connection and try again.', 0);
+  }
+  if (!res.ok) {
+    let msg = 'Something went wrong. Please try again.';
+    try { msg = (await res.json()).error.message || msg; } catch (_) {}
+    throw new ApiError(msg, res.status);
+  }
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let m;
+    while ((m = /\r?\n\r?\n/.exec(buf))) {
+      const block = buf.slice(0, m.index);
+      buf = buf.slice(m.index + m[0].length);
+      const data = block.split(/\r?\n/).filter((l) => l.startsWith('data:')).map((l) => l.slice(5).trimStart()).join('\n');
+      if (data) { try { yield JSON.parse(data); } catch (_) { /* ignore malformed event */ } }
+    }
+  }
+}
+
+let serverStatus = null;
+const loadStatus = () => apiJson('/api/status').then((s) => { serverStatus = s; return s; }).catch(() => null);
+const limits = () => ({
+  maxFileSizeMB: serverStatus?.limits?.maxFileSizeMB || S.limits.maxFileSizeMB,
+  maxFiles: serverStatus?.limits?.maxFilesPerUpload || S.limits.maxFiles
+});
+
+/* =====================================================================
+   Conversation store (kept in this browser)
+   ===================================================================== */
+const CONV_KEY = 'mai.convs.v1';
+const CUR_KEY = 'mai.current';
+let convs = [];
+let conv = null;
+
+function loadConvs() {
+  try { convs = JSON.parse(localStorage.getItem(CONV_KEY)) || []; } catch (_) { convs = []; }
+  if (!Array.isArray(convs)) convs = [];
+}
+function saveConvs() {
+  if (conv && conv.messages.length && !convs.includes(conv)) convs.unshift(conv);
+  convs = convs.filter((c) => c.messages.length).sort((a, b) => b.updatedAt - a.updatedAt).slice(0, S.maxConversations);
+  const clean = convs.map((c) => ({ ...c, messages: c.messages.map(({ streaming, ...m }) => m) }));
+  try { localStorage.setItem(CONV_KEY, JSON.stringify(clean)); } catch (_) { toast('Browser storage is full. Older chats may not be saved.', 'error'); }
+  try { if (conv) localStorage.setItem(CUR_KEY, conv.id); } catch (_) {}
+  renderConvList();
+}
+function makeConv() { return { id: uid(), title: 'New chat', messages: [], createdAt: Date.now(), updatedAt: Date.now() }; }
+function startNewConv() {
+  if (busy) return;
+  conv = makeConv(); convs.unshift(conv);
+}
+function openConv(id) {
+  if (busy) return toast('Please wait for the current answer to finish.');
+  const c = convs.find((x) => x.id === id);
+  if (!c) return;
+  conv = c; try { localStorage.setItem(CUR_KEY, c.id); } catch (_) {}
+  go('chat'); renderChat(true);
+}
+function deleteConv(id) {
+  if (busy && conv && conv.id === id) return toast('Please wait for the current answer to finish.');
+  convs = convs.filter((c) => c.id !== id);
+  if (conv && conv.id === id) conv = null;
+  saveConvs();
+  if (state.route === 'chat') { if (!conv) { startNewConv(); } renderChat(true); }
+}
+function renderConvList() {
+  const box = $('#convList');
+  box.textContent = '';
+  const list = convs.filter((c) => c.messages.length);
+  if (!list.length) { box.append(h('div', { class: 'muted' }, 'No conversations yet.')); return; }
+  for (const c of list) {
+    box.append(h('div', { class: 'conv' + (conv && c.id === conv.id ? ' active' : '') },
+      h('button', { type: 'button', class: 'open', onclick: () => { closeDrawer(); openConv(c.id); } }, c.title),
+      h('button', { type: 'button', class: 'del', 'aria-label': 'Delete conversation: ' + c.title, html: icon('trash'), onclick: () => deleteConv(c.id) })));
+  }
+}
+
+/* =====================================================================
+   Router: / , ?chat , ?search  (back/forward supported)
+   ===================================================================== */
+const state = { route: 'home' };
+const routeFromLocation = () => {
+  const p = new URLSearchParams(location.search);
+  return p.has('chat') ? 'chat' : p.has('search') ? 'search' : 'home';
+};
+function go(route, { replace = false } = {}) {
+  const url = route === 'home' ? location.pathname : `${location.pathname}?${route}`;
+  if (url !== location.pathname + location.search) history[replace ? 'replaceState' : 'pushState']({ route }, '', url);
+  render();
+}
+window.addEventListener('popstate', render);
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[data-route]');
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+  e.preventDefault();
+  closeDrawer();
+  go(a.dataset.route);
+});
+
+const TITLES = { home: 'MOSTAKIM AI — Smarter • Faster • For You', chat: 'Chat — MOSTAKIM AI', search: 'Search — MOSTAKIM AI' };
+let firstRender = true;
+function render() {
+  const route = routeFromLocation();
+  state.route = route;
+  ['home', 'chat', 'search'].forEach((r) => { $('#view-' + r).hidden = r !== route; });
+  $('#foot').hidden = route !== 'home';
+  $('#dock').classList.toggle('on-home', route === 'home');
+  $('#btnBack').hidden = route === 'home';
+  $('#btnNew').hidden = route !== 'chat';
+  $('#btnPlus').hidden = route === 'search';
+  $('#input').placeholder = route === 'search' ? S.searchPlaceholder : S.placeholder;
+  $('#tray').hidden = route === 'search' || !tray.length;
+  document.title = TITLES[route];
+  $$('[data-nav]').forEach((a) => a.classList.toggle('active', a.dataset.nav === route));
+  if (route === 'chat') enterChat();
+  if (route === 'search') enterSearch();
+  syncBusyUi();
+  if (!firstRender) $('#main').focus({ preventScroll: true });
+  firstRender = false;
+}
+
+/* =====================================================================
+   Composer (shared by home / chat / search)
+   ===================================================================== */
+const input = $('#input');
+const autogrow = () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 140) + 'px'; };
+input.addEventListener('input', autogrow);
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && matchMedia('(pointer: fine)').matches) {
+    e.preventDefault();
+    $('#composer').requestSubmit();
+  }
+});
+let busy = false;
+function syncBusyUi() {
+  const searching = state.route === 'search' ? search.phase === 'loading' || search.phase === 'streaming' : false;
+  const generating = state.route === 'chat' ? busy : false;
+  const active = searching || generating;
+  $('#btnSend').hidden = active;
+  $('#btnStop').hidden = !active;
+}
+$('#composer').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const text = input.value;
+  if (state.route === 'search') return runSearch(text);
+  if (state.route === 'home') {
+    if (!text.trim() && !tray.length) { input.focus(); return; }
+    if (trayBusy()) return toast('Please wait for uploads to finish.');
+    startNewConv(); input.value = ''; autogrow(); go('chat'); return sendChat(text);
+  }
+  sendChat(text);
+});
+$('#btnStop').addEventListener('click', () => {
+  if (state.route === 'chat' && ctrl) ctrl.abort();
+  if (state.route === 'search' && sCtrl) sCtrl.abort();
+});
+
+/* =====================================================================
+   CHAT
+   ===================================================================== */
+let ctrl = null;
+let stick = true;
+const chatView = $('#view-chat');
+const chatWrap = $('#chatWrap');
+const els = new WeakMap();
+chatView.addEventListener('scroll', () => { stick = chatView.scrollHeight - chatView.scrollTop - chatView.clientHeight < 90; }, { passive: true });
+
+function enterChat() {
+  if (!conv) {
+    let id = null; try { id = localStorage.getItem(CUR_KEY); } catch (_) {}
+    conv = convs.find((c) => c.id === id) || null;
+    if (!conv) { conv = makeConv(); }
+  }
+  renderChat(true);
+}
+
+function attachChip(a) {
+  const isImg = a.kind === 'image';
+  return h('span', { class: 'mf' },
+    isImg ? h('img', { src: `/api/files/${a.id}/raw`, alt: '', loading: 'lazy', onerror: (e) => { e.target.replaceWith(h('span', { class: 'mf-ico', html: icon('image') })); } })
+      : h('span', { class: 'mf-ico', html: icon(kindIcon(a.kind, extOf(a.name))) }),
+    h('span', {}, a.name));
+}
+
+function buildMsg(m, idx) {
+  if (m.role === 'user') {
+    const bubble = h('div', { class: 'bubble' },
+      m.attachments && m.attachments.length ? h('div', { class: 'msg-files' }, m.attachments.map(attachChip)) : null,
+      m.content ? h('div', { class: 'txt' }, m.content) : null);
+    return h('article', { class: 'msg user' }, bubble);
+  }
+  const md = h('div', { class: 'md' });
+  const notices = h('div');
+  const typing = h('div', { class: 'typing', 'aria-label': 'MOSTAKIM AI is typing' }, h('i'), h('i'), h('i'));
+  const status = h('div');
+  const actions = h('div', { class: 'actions' });
+  const bubble = h('div', { class: 'bubble' }, notices, md, typing, status, actions);
+  const el = h('article', { class: 'msg ai' },
+    h('div', { class: 'avatar' }, h('span', { class: 'logo-crop' }, h('img', { src: '/image/mostakim.ai.png', alt: '' }))), bubble);
+  els.set(m, { md, notices, typing, status, actions });
+  paintAssistant(m);
+  return el;
+}
+
+function paintAssistant(m) {
+  const r = els.get(m);
+  if (!r) return;
+  r.md.innerHTML = renderMarkdown(m.content);
+  r.md.hidden = !m.content;
+  r.typing.hidden = !(m.streaming && !m.content);
+  r.notices.textContent = '';
+  (m.notices || []).forEach((n) => r.notices.append(h('div', { class: 'notice', role: 'status' }, n)));
+  r.status.textContent = '';
+  if (m.error) {
+    r.status.append(h('div', { class: 'err-card', role: 'alert' }, h('span', { html: icon('alert') }),
+      h('div', {}, h('div', {}, m.error), h('button', { type: 'button', onclick: regenerate }, 'Try again'))));
+  } else if (m.stopped) {
+    r.status.append(h('div', { class: 'stopped' }, 'Generation stopped.'));
+  }
+  r.actions.textContent = '';
+  if (!m.streaming && m.content) {
+    r.actions.append(h('button', { type: 'button', class: 'act', 'aria-label': 'Copy response', onclick: async (e) => {
+      const b = e.currentTarget; // must be read before the first await
+      const ok = await copyText(m.content);
+      b.innerHTML = icon(ok ? 'check' : 'copy') + `<span>${ok ? 'Copied' : 'Failed'}</span>`;
+      setTimeout(() => { b.innerHTML = icon('copy') + '<span>Copy</span>'; }, 1500);
+    }, html: icon('copy') + '<span>Copy</span>' }));
+    if (conv && conv.messages[conv.messages.length - 1] === m) {
+      r.actions.append(h('button', { type: 'button', class: 'act', 'aria-label': 'Regenerate response', onclick: regenerate, html: icon('refresh') + '<span>Regenerate</span>' }));
+    }
+  }
+  r.actions.hidden = !r.actions.childNodes.length;
+}
+
+let raf = 0;
+function schedulePaint(m) {
+  if (raf) return;
+  raf = requestAnimationFrame(() => { raf = 0; paintAssistant(m); if (stick) scrollToEnd(chatView); });
+}
+
+function renderChat(forceBottom) {
+  chatWrap.textContent = '';
+  if (serverStatus && serverStatus.chat === false) {
+    chatWrap.append(h('div', { class: 'notice', role: 'status' }, 'AI service is not configured yet.'));
+  }
+  if (!conv || !conv.messages.length) {
+    chatWrap.append(h('div', { class: 'chat-empty' },
+      h('span', { class: 'logo-crop' }, h('img', { src: '/image/mostakim.ai.png', alt: '' })),
+      h('h2', {}, 'How can I help you today?'), h('p', {}, 'Ask anything, or attach a file with the + button.')));
+  } else {
+    conv.messages.forEach((m, i) => chatWrap.append(buildMsg(m, i)));
+  }
+  renderConvList();
+  if (forceBottom) { stick = true; requestAnimationFrame(() => scrollToEnd(chatView)); }
+}
+
+async function sendChat(text) {
+  if (busy) return;
+  text = (text || '').trim();
+  if (trayBusy()) return toast('Please wait for uploads to finish.');
+  const atts = trayReady();
+  if (!text && !atts.length) return;
+  if (!conv) startNewConv();
+  const user = { id: uid(), role: 'user', content: text,
+    attachments: atts.map((a) => ({ id: a.server.id, name: a.server.name, size: a.server.size, mime: a.server.mime, kind: a.server.kind })) };
+  conv.messages.push(user);
+  if (conv.messages.length === 1) conv.title = (text || atts[0]?.server.name || 'New chat').replace(/\s+/g, ' ').slice(0, 48);
+  conv.updatedAt = Date.now();
+  input.value = ''; autogrow();
+  trayClear();
+  const asst = { id: uid(), role: 'assistant', content: '', streaming: true, notices: [] };
+  conv.messages.push(asst);
+  saveConvs(); renderChat(true);
+  await streamAssistant(asst);
+}
+
+async function streamAssistant(asst) {
+  busy = true; ctrl = new AbortController(); syncBusyUi();
+  const upTo = conv.messages.indexOf(asst);
+  const history = conv.messages.slice(0, upTo).slice(-S.maxHistoryMessages);
+  const payload = { stream: true, messages: history.map((m) => ({
+    role: m.role, content: m.content || '', attachments: m.role === 'user' ? (m.attachments || []).map((a) => a.id) : undefined })) };
+  try {
+    for await (const ev of streamEvents('/api/chat', payload, ctrl.signal)) {
+      if (ev.type === 'delta') { asst.content += ev.text; schedulePaint(asst); }
+      else if (ev.type === 'notice') { if (!asst.notices.includes(ev.message)) { asst.notices.push(ev.message); schedulePaint(asst); } }
+      else if (ev.type === 'error') asst.error = ev.message;
+    }
+    if (!asst.content && !asst.error) asst.error = 'No response was received. Please try again.';
+  } catch (err) {
+    if (err.name === 'AbortError') asst.stopped = true; else asst.error = friendly(err);
+  } finally {
+    asst.streaming = false; busy = false; ctrl = null;
+    conv.updatedAt = Date.now();
+    saveConvs(); syncBusyUi();
+    cancelAnimationFrame(raf); raf = 0;
+    if (state.route === 'chat') { renderChat(); if (stick) scrollToEnd(chatView); }
+  }
+}
+
+function regenerate() {
+  if (busy || !conv) return;
+  const last = conv.messages[conv.messages.length - 1];
+  if (!last || last.role !== 'assistant') return;
+  conv.messages.pop();
+  const asst = { id: uid(), role: 'assistant', content: '', streaming: true, notices: [] };
+  conv.messages.push(asst);
+  renderChat(true);
+  streamAssistant(asst);
+}
+
+$('#btnNew').addEventListener('click', () => {
+  if (busy) return toast('Please wait for the current answer to finish.');
+  if (conv && !conv.messages.length) { input.focus(); return; }
+  conv = makeConv(); renderChat(true); input.focus();
+});
+
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-copy-code]');
+  if (btn) {
+    const code = btn.closest('.code').querySelector('code').textContent;
+    const ok = await copyText(code);
+    const label = btn.querySelector('span');
+    label.textContent = ok ? 'Copied' : 'Failed';
+    setTimeout(() => { label.textContent = 'Copy'; }, 1500);
+    return;
+  }
+  const cite = e.target.closest('a[data-cite]');
+  if (cite) {
+    e.preventDefault();
+    const target = document.getElementById('src-' + cite.dataset.cite);
+    if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); target.classList.remove('flash'); void target.offsetWidth; target.classList.add('flash'); }
+  }
+});
+
+/* =====================================================================
+   SEARCH
+   ===================================================================== */
+const search = { query: '', answer: '', sources: [], phase: 'idle', error: '', notices: [] };
+let sCtrl = null;
+const searchView = $('#view-search');
+const searchWrap = $('#searchWrap');
+const RECENT_KEY = 'mai.recent';
+const getRecent = () => { try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch (_) { return []; } };
+const pushRecent = (q) => { try { localStorage.setItem(RECENT_KEY, JSON.stringify([q, ...getRecent().filter((x) => x !== q)].slice(0, 8))); } catch (_) {} };
+let sRefs = null;
+
+function enterSearch() {
+  if (search.phase === 'idle') renderSearchEmpty(); else buildSearch();
+}
+function renderSearchEmpty() {
+  searchWrap.textContent = '';
+  sRefs = null;
+  if (serverStatus && serverStatus.search === false) searchWrap.append(h('div', { class: 'notice', role: 'status' }, 'Search is not configured yet.'));
+  const wrap = h('div', { class: 'search-empty' },
+    h('span', { class: 'logo-crop' }, h('img', { src: '/image/mostakim.ai.png', alt: '' })),
+    h('h2', {}, 'Search the web'), h('p', {}, 'Real-time answers with sources you can open.'));
+  const rec = getRecent();
+  if (rec.length) {
+    wrap.append(h('div', { class: 'recent', role: 'list', 'aria-label': 'Recent searches' },
+      rec.map((q) => h('button', { type: 'button', role: 'listitem', onclick: () => runSearch(q) }, q))));
+  }
+  searchWrap.append(wrap);
+}
+function buildSearch() {
+  searchWrap.textContent = '';
+  const query = h('div', { class: 's-query', html: icon('search') });
+  query.append(h('span', {}, search.query));
+  const loading = h('div', { class: 'loading-line', role: 'status' }, h('span', { class: 'spinner' }), h('span', {}, 'Searching the web…'));
+  const notices = h('div');
+  const answerBody = h('div', { class: 'md' });
+  const errBox = h('div');
+  const answer = h('section', { class: 'panel', 'aria-label': 'Answer' }, h('h2', { class: 'panel-title' }, h('i'), 'Answer'), loading, answerBody, errBox);
+  const srcList = h('div', { class: 'src-list' });
+  const sources = h('section', { class: 'panel', 'aria-label': 'Sources' }, h('h2', { class: 'panel-title' }, h('i'), 'Sources'), srcList);
+  searchWrap.append(query, notices, answer, sources);
+  sRefs = { loading, notices, answerBody, errBox, sources, srcList, answer };
+  paintSearch();
+}
+function paintSearch() {
+  if (!sRefs) return;
+  const r = sRefs;
+  const waiting = (search.phase === 'loading') && !search.answer;
+  r.loading.hidden = !waiting;
+  r.answerBody.hidden = !search.answer;
+  r.answerBody.innerHTML = renderMarkdown(search.answer, search.sources.length);
+  r.notices.textContent = '';
+  search.notices.forEach((n) => r.notices.append(h('div', { class: 'notice' }, n)));
+  r.errBox.textContent = '';
+  if (search.error) {
+    r.errBox.append(h('div', { class: 'err-card', role: 'alert' }, h('span', { html: icon('alert') }),
+      h('div', {}, h('div', {}, search.error), h('button', { type: 'button', onclick: () => runSearch(search.query) }, 'Try again'))));
+  }
+  r.srcList.textContent = '';
+  search.sources.forEach((s, i) => {
+    r.srcList.append(h('a', { class: 'src', id: 'src-' + (i + 1), href: s.url, target: '_blank', rel: 'noopener noreferrer nofollow' },
+      h('span', { class: 'src-n' }, String(i + 1)),
+      h('span', { class: 'src-b' }, h('div', { class: 'src-t' }, s.title || s.domain || s.url), h('div', { class: 'src-d' }, s.domain || ''),
+        s.snippet ? h('div', { class: 's-snippet src-s' }, s.snippet) : null)));
+  });
+  const done = search.phase === 'done' || search.phase === 'error';
+  r.sources.hidden = !search.sources.length && !(done && !search.error);
+  if (done && !search.sources.length && !search.error) {
+    r.srcList.append(h('div', { class: 'muted' }, 'No sources were returned for this search.'));
+  }
+}
+let sRaf = 0;
+const schedSearchPaint = () => { if (sRaf) return; sRaf = requestAnimationFrame(() => { sRaf = 0; paintSearch(); }); };
+
+async function runSearch(q) {
+  q = (q || '').trim();
+  if (q.length < 2) return toast('Please enter something to search for.');
+  if (search.phase === 'loading' || search.phase === 'streaming') return;
+  Object.assign(search, { query: q, answer: '', sources: [], phase: 'loading', error: '', notices: [] });
+  input.value = ''; autogrow();
+  pushRecent(q);
+  buildSearch(); syncBusyUi();
+  sCtrl = new AbortController();
+  try {
+    for await (const ev of streamEvents('/api/search', { query: q, stream: true }, sCtrl.signal)) {
+      if (ev.type === 'delta') { search.answer += ev.text; search.phase = 'streaming'; schedSearchPaint(); }
+      else if (ev.type === 'sources') { search.sources = ev.sources || []; schedSearchPaint(); }
+      else if (ev.type === 'notice') { search.notices.push(ev.message); schedSearchPaint(); }
+      else if (ev.type === 'error') search.error = ev.message;
+    }
+    if (!search.answer && !search.error && !search.sources.length) search.error = 'Search is temporarily unavailable.';
+    search.phase = search.error ? 'error' : 'done';
+  } catch (err) {
+    if (err.name === 'AbortError') { search.phase = 'done'; if (!search.answer) search.error = 'Search stopped.'; }
+    else { search.error = friendly(err); search.phase = 'error'; }
+  } finally {
+    sCtrl = null; cancelAnimationFrame(sRaf); sRaf = 0;
+    if (search.phase === 'loading' || search.phase === 'streaming') search.phase = 'done';
+    if (state.route === 'search') { paintSearch(); syncBusyUi(); }
+  }
+}
+
+/* =====================================================================
+   ATTACHMENTS: real uploads with real progress
+   ===================================================================== */
+const ALLOWED_EXT = new Set(['png', 'jpg', 'jpeg', 'webp', 'gif', 'mp4', 'webm', 'mov', 'mp3', 'wav', 'm4a', 'ogg', 'pdf', 'txt', 'md', 'csv', 'json', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip']);
+const tray = [];
+const trayEl = $('#tray');
+const trayBusy = () => tray.some((t) => t.status === 'uploading');
+const trayReady = () => tray.filter((t) => t.status === 'done' && t.server);
+
+function renderTray() {
+  trayEl.textContent = '';
+  trayEl.hidden = !tray.length || state.route === 'search';
+  for (const t of tray) {
+    const thumb = h('span', { class: 'chip-thumb' });
+    if (t.preview) thumb.append(h('img', { src: t.preview, alt: '' })); else thumb.innerHTML = icon(kindIcon(t.kind, t.ext));
+    const pct = Math.round((t.progress || 0) * 100);
+    let meta;
+    if (t.status === 'error') meta = h('div', { class: 'chip-meta err', role: 'alert' }, t.error);
+    else if (t.status === 'uploading') meta = h('div', { class: 'chip-meta' }, t.progress >= 1 ? 'Processing…' : `Uploading ${pct}%`);
+    else {
+      const extra = t.server && t.server.ext === 'zip' && typeof t.server.childCount === 'number' ? ` • ${t.server.childCount} files extracted` : '';
+      meta = h('div', { class: 'chip-meta' }, `${fmtBytes(t.size)} • ${(t.ext || 'file').toUpperCase()}${extra}`);
+    }
+    const info = h('span', { class: 'chip-info' }, h('div', { class: 'chip-name', title: t.name }, t.name), meta,
+      t.status === 'uploading' ? h('div', { class: 'chip-bar' }, h('i', { style: `width:${pct}%` })) : null);
+    if (t.status === 'done' && t.server && t.server.ext === 'zip' && t.server.childCount) {
+      info.append(h('a', { class: 'chip-link', role: 'button', tabindex: '0', onclick: () => openLibrary(), onkeydown: (e) => { if (e.key === 'Enter') openLibrary(); } }, 'View extracted files'));
+    }
+    trayEl.append(h('div', { class: 'chip' + (t.status === 'error' ? ' error' : ''), role: 'listitem' }, thumb, info,
+      h('button', { type: 'button', class: 'chip-x', 'aria-label': 'Remove ' + t.name, html: icon('close'), onclick: () => trayRemove(t) })));
+  }
+}
+
+function trayRemove(t) {
+  if (t.xhr) { try { t.xhr.abort(); } catch (_) {} }
+  const i = tray.indexOf(t);
+  if (i >= 0) tray.splice(i, 1);
+  if (t.preview && t.preview.startsWith('blob:')) URL.revokeObjectURL(t.preview);
+  // a file uploaded just for this message is removed from the server again; library files are kept
+  if (t.status === 'done' && t.server && !t.fromLibrary) fetch(`/api/files/${t.server.id}`, { method: 'DELETE', credentials: 'same-origin' }).catch(() => {});
+  renderTray();
+}
+function trayClear() {
+  tray.forEach((t) => { if (t.preview && t.preview.startsWith('blob:')) URL.revokeObjectURL(t.preview); });
+  tray.length = 0; renderTray();
+}
+
+function addFiles(fileList) {
+  let files = Array.from(fileList || []);
+  if (!files.length) return;
+  const { maxFiles } = limits();
+  if (tray.length + files.length > maxFiles) {
+    toast(`You can attach up to ${maxFiles} files at once.`, 'error');
+    files = files.slice(0, Math.max(0, maxFiles - tray.length));
+  }
+  files.forEach(uploadAttachment);
+}
+
+function uploadAttachment(file) {
+  const ext = extOf(file.name);
+  const { maxFileSizeMB } = limits();
+  const t = { id: uid(), file, name: file.name, size: file.size, ext, kind: file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : file.type.startsWith('audio/') ? 'audio' : ext === 'zip' ? 'archive' : 'document',
+    status: 'uploading', progress: 0, preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : '' };
+  tray.push(t);
+  if (!ALLOWED_EXT.has(ext)) { t.status = 'error'; t.error = 'This file type is not supported.'; return renderTray(); }
+  if (file.size > maxFileSizeMB * 1048576) { t.status = 'error'; t.error = 'File size exceeds the allowed limit.'; return renderTray(); }
+  if (!file.size) { t.status = 'error'; t.error = 'The file is empty.'; return renderTray(); }
+  renderTray();
+
+  const fd = new FormData();
+  fd.append('files', file, file.name);
+  const xhr = new XMLHttpRequest();
+  t.xhr = xhr;
+  xhr.open('POST', '/api/upload');
+  xhr.upload.onprogress = (e) => { if (e.lengthComputable) { t.progress = e.loaded / e.total; renderTray(); } };
+  xhr.onload = () => {
+    t.xhr = null;
+    let j = null; try { j = JSON.parse(xhr.responseText); } catch (_) {}
+    if (xhr.status >= 200 && xhr.status < 300 && j && j.files && j.files[0]) {
+      t.server = j.files[0]; t.status = 'done'; t.progress = 1; t.kind = t.server.kind;
+      if (t.server.skipped && t.server.skipped.length) toast(`${t.server.skipped.length} file(s) in the ZIP were skipped for safety.`);
+    } else {
+      t.status = 'error';
+      t.error = (j && ((j.errors && j.errors[0] && j.errors[0].message) || (j.error && j.error.message))) || 'Upload failed. Please try again.';
+    }
+    renderTray();
+  };
+  xhr.onerror = () => { t.xhr = null; t.status = 'error'; t.error = 'Upload failed. Please try again.'; renderTray(); };
+  xhr.send(fd);
+}
+
+/* ---- attach menu ---- */
+const plusDlg = $('#plusDlg');
+const PICK = { camera: '#inCamera', image: '#inImage', file: '#inFile', zip: '#inZip', video: '#inVideo', audio: '#inAudio', doc: '#inDoc' };
+$('#btnPlus').addEventListener('click', () => plusDlg.showModal());
+plusDlg.addEventListener('click', (e) => {
+  if (e.target === plusDlg) return plusDlg.close();
+  const item = e.target.closest('[data-pick]');
+  if (!item) return;
+  plusDlg.close();
+  if (item.dataset.pick === 'camera') return openCamera();
+  $(PICK[item.dataset.pick]).click();
+});
+$('#plusLibrary').addEventListener('click', () => { plusDlg.close(); openLibrary(); });
+Object.values(PICK).forEach((sel) => $(sel).addEventListener('change', (e) => { addFiles(e.target.files); e.target.value = ''; }));
+
+/* ---- camera (falls back to the normal file picker) ---- */
+const camDlg = $('#camDlg');
+const camVideo = $('#camVideo');
+let camStream = null;
+function stopCamera() { if (camStream) { camStream.getTracks().forEach((t) => t.stop()); camStream = null; } camVideo.srcObject = null; }
+async function openCamera() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.isSecureContext) {
+    toast('Live camera is not available here. Please choose or take a photo instead.');
+    return $('#inCamera').click();
+  }
+  try {
+    camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    camVideo.srcObject = camStream;
+    camDlg.showModal();
+  } catch (err) {
+    stopCamera();
+    if (err && (err.name === 'NotAllowedError' || err.name === 'SecurityError')) toast('Camera permission was denied. You can choose a photo instead.', 'error');
+    else toast('No camera was found. You can choose a photo instead.', 'error');
+    $('#inCamera').click();
+  }
+}
+$('#camShot').addEventListener('click', () => {
+  const w = camVideo.videoWidth, hgt = camVideo.videoHeight;
+  if (!w || !hgt) return toast('The camera is not ready yet.');
+  const c = document.createElement('canvas'); c.width = w; c.height = hgt;
+  c.getContext('2d').drawImage(camVideo, 0, 0, w, hgt);
+  c.toBlob((blob) => {
+    if (!blob) return toast('Could not capture the photo. Please try again.', 'error');
+    camDlg.close();
+    addFiles([new File([blob], `camera-${Date.now()}.jpg`, { type: 'image/jpeg' })]);
+  }, 'image/jpeg', 0.92);
+});
+camDlg.addEventListener('close', stopCamera);
+
+/* =====================================================================
+   MICROPHONE (browser speech recognition)
+   ===================================================================== */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null;
+const btnMic = $('#btnMic');
+function micState(on) { btnMic.classList.toggle('listening', on); btnMic.setAttribute('aria-pressed', String(on)); btnMic.setAttribute('aria-label', on ? 'Stop voice input' : 'Voice input'); }
+btnMic.addEventListener('click', () => {
+  if (!SR) return toast('Voice input is not supported in this browser. Please type your message.');
+  if (rec) { rec.stop(); return; }
+  const r = new SR();
+  r.lang = S.speechLang || navigator.language || 'en-US';
+  r.interimResults = true; r.continuous = false;
+  const base = input.value;
+  let finalText = '';
+  r.onresult = (e) => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalText += e.results[i][0].transcript; else interim += e.results[i][0].transcript;
+    }
+    input.value = (base + (base && !/\s$/.test(base) ? ' ' : '') + finalText + interim).trimStart();
+    autogrow();
+  };
+  r.onerror = (e) => {
+    const msg = { 'not-allowed': 'Microphone permission was denied.', 'service-not-allowed': 'Microphone permission was denied.',
+      'no-speech': 'No speech was detected. Please try again.', 'audio-capture': 'No microphone was found.', network: 'Voice input needs an internet connection.' }[e.error];
+    if (e.error !== 'aborted') toast(msg || 'Voice input failed. Please try again.', 'error');
+  };
+  r.onend = () => { rec = null; micState(false); input.focus(); };
+  try { r.start(); rec = r; micState(true); } catch (_) { rec = null; micState(false); toast('Voice input could not start.', 'error'); }
+});
+
+/* =====================================================================
+   MEDIA LIBRARY (real server storage)
+   ===================================================================== */
+const libDlg = $('#libDlg');
+const prevDlg = $('#prevDlg');
+const lib = { files: [], used: 0, quota: 0, filter: 'all', editing: null, open: new Set(), loading: false };
+
+async function openLibrary() {
+  closeDrawer();
+  if (!libDlg.open) libDlg.showModal();
+  await loadLibrary();
+}
+async function loadLibrary() {
+  lib.loading = true; renderLibrary();
+  try {
+    const d = await apiJson('/api/files');
+    lib.files = d.files; lib.used = d.usedBytes; lib.quota = d.quotaBytes;
+  } catch (err) { toast(friendly(err), 'error'); }
+  lib.loading = false; renderLibrary();
+}
+function libThumb(f) {
+  const box = h('button', { type: 'button', class: 'lib-thumb', 'aria-label': f.previewable ? 'Preview ' + f.name : 'Details for ' + f.name, onclick: () => openPreview(f) });
+  if (f.kind === 'image') box.append(h('img', { src: f.rawUrl, alt: '', loading: 'lazy', onerror: (e) => { e.target.remove(); box.innerHTML = icon('image'); } }));
+  else box.innerHTML = icon(kindIcon(f.kind, f.ext));
+  return box;
+}
+function libItem(f, child) {
+  const nameEl = lib.editing === f.id
+    ? h('form', { class: 'lib-rename', onsubmit: (e) => { e.preventDefault(); doRename(f, e.target.elements.name.value); } },
+        h('input', { name: 'name', value: f.name.replace(/\.[^.]+$/, ''), 'aria-label': 'New file name', maxlength: '110', style: 'width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface)' }),
+        h('div', { class: 'lib-acts' }, h('button', { type: 'submit', class: 'act', html: icon('check') + '<span>Save</span>' }),
+          h('button', { type: 'button', class: 'act', onclick: () => { lib.editing = null; renderLibrary(); }, html: icon('close') + '<span>Cancel</span>' })))
+    : h('div', { class: 'lib-name' }, f.name);
+  const acts = h('div', { class: 'lib-acts' });
+  if (lib.editing !== f.id) {
+    if (f.previewable || f.kind === 'text') acts.append(h('button', { type: 'button', class: 'act', onclick: () => openPreview(f), html: icon('eye') + '<span>Preview</span>' }));
+    acts.append(h('a', { class: 'act', href: f.downloadUrl, download: f.name, html: icon('download') + '<span>Download</span>' }));
+    acts.append(h('button', { type: 'button', class: 'act', onclick: () => { lib.editing = f.id; renderLibrary(); }, html: icon('edit') + '<span>Rename</span>' }));
+    if (state.route !== 'search') acts.append(h('button', { type: 'button', class: 'act', onclick: () => attachFromLibrary(f), html: icon('paperclip') + '<span>Attach</span>' }));
+    let armed = 0;
+    const del = h('button', { type: 'button', class: 'act del', 'aria-label': 'Delete ' + f.name, html: icon('trash') + '<span>Delete</span>' });
+    del.addEventListener('click', () => {
+      if (!armed) {
+        armed = setTimeout(() => { armed = 0; del.innerHTML = icon('trash') + '<span>Delete</span>'; }, 3500);
+        del.innerHTML = icon('trash') + `<span>${f.childCount ? `Delete with ${f.childCount} files?` : 'Tap again to confirm'}</span>`; return;
+      }
+      clearTimeout(armed); doDelete(f);
+    });
+    acts.append(del);
+  }
+  const meta = `${(f.ext || 'file').toUpperCase()} • ${fmtBytes(f.size)} • ${fmtDate(f.createdAt)}` + (f.childCount ? ` • ${f.childCount} files extracted` : '') + (child && f.zipPath ? ` • ${f.zipPath}` : '');
+  return h('div', { class: 'lib-item' + (child ? ' child' : '') }, libThumb(f), h('div', {}, nameEl, h('div', { class: 'lib-meta' }, meta), acts));
+}
+function renderLibrary() {
+  const box = $('#libList');
+  box.textContent = '';
+  $('#libQuota').textContent = lib.quota ? `${fmtBytes(lib.used)} of ${fmtBytes(lib.quota)} used` : '';
+  if (lib.loading && !lib.files.length) return box.append(h('div', { class: 'lib-empty' }, h('span', { class: 'spinner', style: 'margin:0 auto 8px' }), 'Loading…'));
+  const tops = lib.files.filter((f) => !f.zipOf && (lib.filter === 'all' || f.kind === lib.filter));
+  if (!tops.length) return box.append(h('div', { class: 'lib-empty' }, lib.filter === 'all' ? 'No files yet. Use the + button or Upload to add some.' : 'No files of this type.'));
+  for (const f of tops) {
+    box.append(libItem(f, false));
+    if (f.childCount) {
+      const kids = lib.files.filter((c) => c.zipOf === f.id);
+      const open = lib.open.has(f.id);
+      box.append(h('button', { type: 'button', class: 'act', style: 'margin-left:18px', 'aria-expanded': String(open),
+        onclick: () => { open ? lib.open.delete(f.id) : lib.open.add(f.id); renderLibrary(); } }, (open ? 'Hide' : 'Show') + ` ${kids.length} extracted files`));
+      if (open) kids.forEach((c) => box.append(libItem(c, true)));
+    }
+  }
+}
+async function doRename(f, name) {
+  try {
+    await apiJson(`/api/files/${f.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+    lib.editing = null; toast('File renamed.'); await loadLibrary();
+  } catch (err) { toast(friendly(err), 'error'); }
+}
+async function doDelete(f) {
+  try {
+    await apiJson(`/api/files/${f.id}`, { method: 'DELETE' });
+    // detach deleted files from the current tray
+    tray.filter((t) => t.server && (t.server.id === f.id)).forEach((t) => { t.fromLibrary = true; trayRemove(t); });
+    toast('File deleted.'); await loadLibrary();
+  } catch (err) { toast(friendly(err), 'error'); }
+}
+function attachFromLibrary(f) {
+  const { maxFiles } = limits();
+  if (tray.length >= maxFiles) return toast(`You can attach up to ${maxFiles} files at once.`, 'error');
+  if (tray.some((t) => t.server && t.server.id === f.id)) return toast('This file is already attached.');
+  tray.push({ id: uid(), name: f.name, size: f.size, ext: f.ext, kind: f.kind, status: 'done', progress: 1, server: f, fromLibrary: true, preview: f.kind === 'image' ? f.rawUrl : '' });
+  renderTray(); libDlg.close(); toast('Attached.');
+  if (state.route === 'home') go('chat');
+}
+$('#libFilter').addEventListener('change', (e) => { lib.filter = e.target.value; renderLibrary(); });
+$('#libUpload').addEventListener('click', () => {
+  const inp = h('input', { type: 'file', multiple: true, hidden: true });
+  inp.addEventListener('change', async () => {
+    const files = Array.from(inp.files); if (!files.length) return;
+    let done = 0;
+    for (const file of files) {
+      const fd = new FormData(); fd.append('files', file, file.name);
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: fd, credentials: 'same-origin' });
+        const j = await res.json().catch(() => null);
+        if (res.ok) done += j.files.length;
+        else toast((j && (j.errors?.[0]?.message || j.error?.message)) || 'Upload failed. Please try again.', 'error');
+      } catch (_) { toast('Upload failed. Please try again.', 'error'); }
+    }
+    if (done) toast(`${done} file(s) uploaded.`);
+    loadLibrary();
+  });
+  inp.click();
+});
+libDlg.addEventListener('click', (e) => { if (e.target === libDlg) libDlg.close(); });
+
+async function openPreview(f) {
+  $('#prevTitle').textContent = f.name;
+  const body = $('#prevBody'); const actions = $('#prevActions');
+  body.textContent = ''; actions.textContent = '';
+  if (f.kind === 'image') body.append(h('img', { src: f.rawUrl, alt: f.name }));
+  else if (f.kind === 'video' && f.previewable) body.append(h('video', { src: f.rawUrl, controls: true, playsinline: true }));
+  else if (f.kind === 'audio' && f.previewable) body.append(h('audio', { src: f.rawUrl, controls: true }));
+  else if (f.kind === 'text' && f.previewable) {
+    body.append(h('pre', {}, 'Loading…'));
+    try {
+      const r = await fetch(f.rawUrl, { credentials: 'same-origin' });
+      const t = await r.text();
+      body.firstChild.textContent = t.length > 100000 ? t.slice(0, 100000) + '\n… (truncated)' : t;
+    } catch (_) { body.firstChild.textContent = 'The preview could not be loaded.'; }
+  } else if (f.ext === 'pdf') body.append(h('p', { class: 'muted' }, 'PDF files open in a new tab.'));
+  else body.append(h('p', { class: 'muted' }, 'No preview is available for this file type. You can download it instead.'));
+  if (f.ext === 'pdf') actions.append(h('a', { class: 'btn ghost', href: f.rawUrl, target: '_blank', rel: 'noopener noreferrer', html: icon('eye') + '<span>Open</span>' }));
+  actions.append(h('a', { class: 'btn', href: f.downloadUrl, download: f.name, html: icon('download') + '<span>Download</span>' }));
+  const meta = h('p', { class: 'lib-meta', style: 'width:100%;margin-top:6px' }, `${f.mime} • ${fmtBytes(f.size)} • ${fmtDate(f.createdAt)}`);
+  actions.append(meta);
+  prevDlg.showModal();
+}
+prevDlg.addEventListener('click', (e) => { if (e.target === prevDlg) prevDlg.close(); });
+prevDlg.addEventListener('close', () => { $('#prevBody').textContent = ''; });
+
+/* =====================================================================
+   Drawer, dialogs, theme wiring
+   ===================================================================== */
+const drawer = $('#drawer');
+let drawerOpener = null;
+function openDrawer() { drawerOpener = document.activeElement; renderConvList(); drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); $('#btnMenu').setAttribute('aria-expanded', 'true'); $('#btnCloseDrawer').focus(); }
+function closeDrawer() {
+  if (!drawer.classList.contains('open')) return;
+  drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); $('#btnMenu').setAttribute('aria-expanded', 'false');
+  if (drawerOpener && drawerOpener.focus) drawerOpener.focus();
+}
+$('#btnMenu').addEventListener('click', openDrawer);
+$('#btnCloseDrawer').addEventListener('click', closeDrawer);
+drawer.addEventListener('click', (e) => { if (e.target.hasAttribute('data-close-drawer')) closeDrawer(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
+$('#navLibrary').addEventListener('click', openLibrary);
+$('#navTheme').addEventListener('click', toggleTheme);
+$('#btnTheme').addEventListener('click', toggleTheme);
+$('#btnBack').addEventListener('click', () => { if (history.length > 1 && document.referrer.startsWith(location.origin)) history.back(); else go('home'); });
+$$('dialog [data-close]').forEach((b) => b.addEventListener('click', () => b.closest('dialog').close()));
+
+/* =====================================================================
+   Init
+   ===================================================================== */
+(function init() {
+  hydrateIcons();
+  applyTheme(document.documentElement.getAttribute('data-theme') || 'light', false);
+  $('#brandTag').textContent = S.tagline;
+  $('#greetName').textContent = S.greetingName;
+  if (S.tickerText) $('#ticker').textContent = S.tickerText;
+  if (S.footerText) $('#footTicker').textContent = S.footerText;
+  if (S.poweredBy) $('#poweredBy').textContent = S.poweredBy;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    ['ticker', 'footTicker'].forEach((id) => { const m = $('#' + id); if (m && typeof m.stop === 'function') m.stop(); });
+  }
+  loadConvs();
+  try { const id = localStorage.getItem(CUR_KEY); conv = convs.find((c) => c.id === id) || null; } catch (_) {}
+  render();
+  renderConvList();
+  loadStatus().then(() => { if (state.route === 'chat') renderChat(); if (state.route === 'search' && search.phase === 'idle') renderSearchEmpty(); });
+})();
+})();
+</script>
+</body>
+</html>
