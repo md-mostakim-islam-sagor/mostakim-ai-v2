@@ -1,11 +1,15 @@
 {
   "geminiApiKey": "",
-  "openaiApiKey": "",
   "groqApiKey": "",
+  "openaiApiKey": "",
   "openRouterApiKey": "",
   "searchApiKey": "",
   "searchProvider": "auto",
   "apiAuthKey": "",
   "corsOrigins": [],
-  "port": 3000
+  "port": 3000,
+  "models": {
+    "gemini": ["gemini-3.5-flash", "gemini-flash-latest"],
+    "groq": ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]
+  }
 }

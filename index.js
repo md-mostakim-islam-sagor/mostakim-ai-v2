@@ -27,8 +27,10 @@ const cfg = require('./config');
 const ROOT = __dirname;
 const SRC_DIR = path.join(ROOT, 'src');
 const IMAGE_DIR = path.join(ROOT, 'image');
-const UPLOAD_DIR = path.join(ROOT, 'uploads');
-const TEMP_DIR = path.join(ROOT, 'temp');
+// On Vercel the project folder is read-only; only /tmp is writable (and it is temporary).
+const DATA_ROOT = cfg.isServerless ? require('os').tmpdir() : ROOT;
+const UPLOAD_DIR = path.join(DATA_ROOT, 'uploads');
+const TEMP_DIR = path.join(DATA_ROOT, 'temp');
 
 const MB = 1024 * 1024;
 const MAX_FILE_BYTES = cfg.limits.maxFileSizeMB * MB;
@@ -535,6 +537,7 @@ async function processUploads(owner, files) {
       try {
         if (!type) throw new AppError(415, 'unsupported_type', 'This file type is not supported.');
         if (!f.size) throw new AppError(400, 'empty_file', 'The file is empty.');
+        if (f.size > MAX_FILE_BYTES) throw new AppError(413, 'file_too_large', 'File size exceeds the allowed limit.');
         const head = await readHead(f.path, 8192);
         const kinds = sniffKinds(head);
         if (!type.sniff.some((s) => kinds.includes(s))) {
@@ -729,7 +732,17 @@ async function prepareConversation(key, messages) {
     }
     out[i] = entry;
   }
-  return { convo: out, notices: [...state.notices] };
+  // After a stopped/failed answer two user turns can follow each other; merge them because some
+  // providers (e.g. Gemini) require alternating roles.
+  const convo = [];
+  for (const m of out) {
+    const prev = convo[convo.length - 1];
+    if (prev && prev.role === m.role) {
+      prev.text = [prev.text, m.text].filter(Boolean).join('\n\n');
+      prev.media.push(...m.media);
+    } else convo.push({ role: m.role, text: m.text, media: [...m.media] });
+  }
+  return { convo, notices: [...state.notices] };
 }
 
 /* ------------------------------------------------------------------ */
@@ -778,6 +791,26 @@ async function* sseData(res) {
   }
 }
 
+const isModelError = (status, detail) =>
+  (status === 404 || status === 400) && /model|not found|decommission|deprecat|no longer/i.test(detail || '');
+
+/** Calls makeRequest(model) for each candidate model; moves on when a model has been retired/renamed. */
+async function fetchWithModelFallback(models, makeRequest) {
+  let lastErr;
+  for (let i = 0; i < models.length; i++) {
+    const res = await makeRequest(models[i]);
+    if (res.ok) return res;
+    const detail = await safeText(res);
+    lastErr = new ProviderError(res.status, detail);
+    if (i < models.length - 1 && isModelError(res.status, detail)) {
+      console.error(`[chat] model "${models[i]}" is unavailable (${res.status}), trying "${models[i + 1]}"`);
+      continue;
+    }
+    throw lastErr;
+  }
+  throw lastErr;
+}
+
 function toOpenAIMessage(m, allowImages, notices) {
   if (m.role === 'assistant') return { role: 'assistant', content: m.text || ' ' };
   let text = m.text || '';
@@ -799,23 +832,23 @@ function toOpenAIMessage(m, allowImages, notices) {
   };
 }
 
-function openAICompatible({ label, baseUrl, key, model, allowImages, headers = {} }) {
+function openAICompatible({ label, baseUrl, key, models, allowImages, headers = {} }) {
   return async function* stream({ system, messages, signal }) {
     const notices = new Set();
-    const body = {
-      model: model(),
+    const payload = {
       stream: true,
       messages: [{ role: 'system', content: system }, ...messages.map((m) => toOpenAIMessage(m, allowImages(), notices))]
     };
     for (const n of notices) yield { type: 'notice', message: n };
 
-    const res = await fetch(`${baseUrl}/chat/completions`, {
-      method: 'POST',
-      signal: withTimeout(signal),
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key()}`, ...headers },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) throw new ProviderError(res.status, await safeText(res));
+    const res = await fetchWithModelFallback(models(), (model) =>
+      fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        signal: withTimeout(signal),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${key()}`, ...headers },
+        body: JSON.stringify({ ...payload, model })
+      })
+    );
 
     for await (const data of sseData(res)) {
       if (data === '[DONE]') return;
@@ -857,23 +890,20 @@ async function* geminiStream({ system, messages, signal, grounded = false }) {
   });
   for (const n of notices) yield { type: 'notice', message: n };
 
-  const body = {
-    systemInstruction: { parts: [{ text: system }] },
-    contents,
-    generationConfig: { temperature: 0.7 }
-  };
+  const body = { systemInstruction: { parts: [{ text: system }] }, contents };
   if (grounded) body.tools = [{ google_search: {} }];
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(cfg.models.gemini)}:streamGenerateContent?alt=sse`,
-    {
-      method: 'POST',
-      signal: withTimeout(signal),
-      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': cfg.geminiApiKey },
-      body: JSON.stringify(body)
-    }
+  const res = await fetchWithModelFallback(cfg.models.gemini, (model) =>
+    fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse`,
+      {
+        method: 'POST',
+        signal: withTimeout(signal),
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': cfg.geminiApiKey },
+        body: JSON.stringify(body)
+      }
+    )
   );
-  if (!res.ok) throw new ProviderError(res.status, await safeText(res));
 
   const sources = new Map();
   for await (const data of sseData(res)) {
@@ -911,8 +941,8 @@ const PROVIDERS = {
       label: 'groq',
       baseUrl: 'https://api.groq.com/openai/v1',
       key: () => cfg.groqApiKey,
-      model: () => cfg.models.groq,
-      allowImages: () => /vision|llama-4|scout|maverick/i.test(cfg.models.groq)
+      models: () => cfg.models.groq,
+      allowImages: () => /vision|-vl-/i.test(cfg.models.groq.join(' '))
     })
   },
   openai: {
@@ -921,7 +951,7 @@ const PROVIDERS = {
       label: 'openai',
       baseUrl: 'https://api.openai.com/v1',
       key: () => cfg.openaiApiKey,
-      model: () => cfg.models.openai,
+      models: () => cfg.models.openai,
       allowImages: () => true
     })
   },
@@ -931,7 +961,7 @@ const PROVIDERS = {
       label: 'openrouter',
       baseUrl: 'https://openrouter.ai/api/v1',
       key: () => cfg.openRouterApiKey,
-      model: () => cfg.models.openRouter,
+      models: () => cfg.models.openRouter,
       allowImages: () => true,
       headers: { 'X-Title': 'MOSTAKIM AI' }
     })
@@ -1240,6 +1270,7 @@ function statusHandler(_req, res) {
     chat: chatProviderNames().length > 0,
     search: pickSearchMode() !== null,
     upload: true,
+    storage: cfg.isServerless ? 'temporary' : 'persistent',
     authRequired: !!cfg.apiAuthKey,
     limits: { maxFileSizeMB: cfg.limits.maxFileSizeMB, maxFilesPerUpload: cfg.limits.maxFilesPerUpload }
   });

@@ -1,7 +1,12 @@
 node_modules/
-config.json
 .env
 uploads/
 temp/
 logs/
 *.log
+.vercel/
+
+# NOTE: config.json is NOT ignored here (it holds your API keys).
+# Only commit it to a PRIVATE repository. To keep keys out of git, add the line
+#   config.json
+# below and use environment variables instead (see README).

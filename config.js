@@ -86,6 +86,8 @@ const config = Object.freeze({
   host: str(file.host, env.HOST) || '0.0.0.0',
   trustProxy: trustProxyValue(),
   isProduction: (env.NODE_ENV || '').toLowerCase() === 'production',
+  // true on Vercel / AWS Lambda style hosts: read-only disk, ~4.5 MB request bodies
+  isServerless: !!(env.VERCEL || env.AWS_LAMBDA_FUNCTION_NAME),
 
   // ---- credentials (server side only) ----
   geminiApiKey: str(file.geminiApiKey, env.GEMINI_API_KEY),
@@ -99,11 +101,13 @@ const config = Object.freeze({
   // order in which configured chat providers are tried (automatic fallback)
   chatProviders: list(['gemini', 'groq', 'openai', 'openRouter'], file.chatProviders, env.CHAT_PROVIDERS),
 
+  // Each entry is a LIST: the first available model is used; if a provider says a model no longer
+  // exists (retired / renamed) the next one is tried automatically.
   models: Object.freeze({
-    gemini: str(models.gemini, env.GEMINI_MODEL) || 'gemini-2.5-flash',
-    openai: str(models.openai, env.OPENAI_MODEL) || 'gpt-4o-mini',
-    groq: str(models.groq, env.GROQ_MODEL) || 'llama-3.3-70b-versatile',
-    openRouter: str(models.openRouter, env.OPENROUTER_MODEL) || 'openrouter/auto',
+    gemini: list(['gemini-3.5-flash', 'gemini-flash-latest'], models.gemini, env.GEMINI_MODEL),
+    openai: list(['gpt-4o-mini'], models.openai, env.OPENAI_MODEL),
+    groq: list(['openai/gpt-oss-120b', 'openai/gpt-oss-20b'], models.groq, env.GROQ_MODEL),
+    openRouter: list(['openrouter/auto'], models.openRouter, env.OPENROUTER_MODEL),
     openaiSearch: str(models.openaiSearch, env.OPENAI_SEARCH_MODEL) || 'gpt-4o-mini-search-preview'
   }),
 
@@ -118,7 +122,7 @@ const config = Object.freeze({
   corsOrigins: list([], file.corsOrigins, env.CORS_ORIGINS),
 
   limits: Object.freeze({
-    maxFileSizeMB: num(25, limits.maxFileSizeMB, env.MAX_FILE_SIZE_MB),
+    maxFileSizeMB: num(env.VERCEL ? 4 : 25, limits.maxFileSizeMB, env.MAX_FILE_SIZE_MB),
     maxFilesPerUpload: Math.floor(num(10, limits.maxFilesPerUpload, env.MAX_FILES_PER_UPLOAD)),
     userQuotaMB: num(200, limits.userQuotaMB, env.USER_QUOTA_MB),
     zipMaxEntries: Math.floor(num(500, limits.zipMaxEntries)),
