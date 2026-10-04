@@ -51,7 +51,7 @@
       <section class="view home" id="view-home" aria-label="Home">
         <div class="hero">
           <span class="logo-crop"><img src="/image/mostakim.ai.png" alt="MOSTAKIM AI" width="1254" height="1254" decoding="async"></span>
-          <h1>Hello <span class="name" id="greetName">Chief</span></h1>
+          <h1>Hello, <span class="name" id="greetName">Chief</span></h1>
           <p class="sub">What would you like to do today?</p>
           <p class="desc">Chat with AI or search the web — get answers, explore ideas and make your life easier.</p>
         </div>
@@ -318,7 +318,7 @@ function mdInline(src, cites) {
   s = s.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+|mailto:[^\s)]+)\)/g,
     (_, t, u) => `<a href="${u}" target="_blank" rel="noopener noreferrer nofollow">${t}</a>`);
   s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>').replace(/__([^_\n]+)__/g, '<strong>$1</strong>');
-  s = s.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>').replace(/(^|[\s(])_([^_\n]+)_(?=[\s).,!?:;]|$)/g, '$1<em>$2</em>');
+  s = s.replace(/(^|[^*])\*(?!\s)([^*\n]*[^*\s])\*(?!\*)/g, '$1<em>$2</em>').replace(/(^|[\s(])_([^_\n]+)_(?=[\s).,!?:;]|$)/g, '$1<em>$2</em>');
   s = s.replace(/~~([^~\n]+)~~/g, '<del>$1</del>');
   s = s.replace(/(^|[\s(])(https?:\/\/[^\s<)]+[^\s<).,;:!?])/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer nofollow">$2</a>');
   if (cites) {
@@ -1106,6 +1106,9 @@ function renderLibrary() {
   const box = $('#libList');
   box.textContent = '';
   $('#libQuota').textContent = lib.quota ? `${fmtBytes(lib.used)} of ${fmtBytes(lib.quota)} used` : '';
+  if (serverStatus && serverStatus.storage === 'temporary' && !$('#libTemp')) {
+    $('#libList').before(h('div', { id: 'libTemp', class: 'notice', role: 'note' }, 'Files are stored temporarily on this host and may disappear after a while.'));
+  }
   if (lib.loading && !lib.files.length) return box.append(h('div', { class: 'lib-empty' }, h('span', { class: 'spinner', style: 'margin:0 auto 8px' }), 'Loading…'));
   const tops = lib.files.filter((f) => !f.zipOf && (lib.filter === 'all' || f.kind === lib.filter));
   if (!tops.length) return box.append(h('div', { class: 'lib-empty' }, lib.filter === 'all' ? 'No files yet. Use the + button or Upload to add some.' : 'No files of this type.'));
