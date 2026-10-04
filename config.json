@@ -1,0 +1,11 @@
+{
+  "geminiApiKey": "",
+  "openaiApiKey": "",
+  "groqApiKey": "",
+  "openRouterApiKey": "",
+  "searchApiKey": "",
+  "searchProvider": "auto",
+  "apiAuthKey": "",
+  "corsOrigins": [],
+  "port": 3000
+}
