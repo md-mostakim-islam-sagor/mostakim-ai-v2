@@ -12,7 +12,6 @@
  * Nothing from here is exposed through static files or API responses.
  */
 
-const fs = require('fs');
 const path = require('path');
 
 // Optional .env support without extra dependencies (Node >= 20.12).
@@ -24,18 +23,19 @@ try {
   /* no .env file - that's fine */
 }
 
-function readJsonFile(file) {
+function loadConfigFile() {
   try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
+    // static require: Vercel's bundler sees it and ships config.json with the function
+    return require('./config.json');
   } catch (err) {
-    if (err.code !== 'ENOENT') {
+    if (err && err.code !== 'MODULE_NOT_FOUND') {
       console.error('[config] config.json could not be read. Please check its JSON syntax.');
     }
     return {};
   }
 }
 
-const file = readJsonFile(path.join(__dirname, 'config.json'));
+const file = loadConfigFile() || {};
 const env = process.env;
 
 const PLACEHOLDER = /^(your[_-]|put[_-]|paste[_-]|xxx|changeme)/i;
