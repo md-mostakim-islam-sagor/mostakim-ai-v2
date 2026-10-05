@@ -1521,11 +1521,19 @@ function createApp() {
   }
 
   // frontend
+  // The page is read lazily (and cached in production) so a missing file can never crash start-up.
+  let cachedIndex = null;
   const readIndex = () => fs.readFileSync(path.join(SRC_DIR, 'index.html'), 'utf8');
-  let cachedIndex = cfg.isProduction ? readIndex() : null;
   app.get(['/', '/index.html'], (_req, res) => {
-    const html = (cachedIndex || readIndex()).replace(/__CSP_NONCE__/g, res.locals.cspNonce);
-    res.type('html').set('Cache-Control', 'no-cache').send(html);
+    let html;
+    try {
+      html = cachedIndex || readIndex();
+      if (cfg.isProduction) cachedIndex = html;
+    } catch (err) {
+      console.error('[server] could not read src/index.html:', err.message);
+      return res.status(500).type('text/plain').send('The page could not be loaded.');
+    }
+    res.type('html').set('Cache-Control', 'no-cache').send(html.replace(/__CSP_NONCE__/g, res.locals.cspNonce));
   });
   app.get('/favicon.ico', (_req, res) => res.redirect(301, '/image/mostakim.ai.png'));
   app.use('/image', express.static(IMAGE_DIR, { dotfiles: 'ignore', index: false, maxAge: '7d' }));
