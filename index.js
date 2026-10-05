@@ -1,10 +1,5 @@
 'use strict';
 
-/**
- * MOSTAKIM AI - backend
- * Express server: static frontend, AI chat, web search, uploads, ZIP extraction, media library.
- * Provider API keys live in config.json / environment variables and never reach the browser.
- */
 
 const fs = require('fs');
 const fsp = fs.promises;
