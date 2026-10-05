@@ -187,17 +187,21 @@ Rate limits per IP/minute (configurable): 180 general · 20 chat/search · 30 up
 
 ### Vercel (private GitHub repo)
 
-Your repo is **private**, so committing `config.json` with your keys is fine - the app reads it on Vercel too.
+Your repo is **private**, so committing `config.json` with your keys is fine - the function reads it on Vercel too.
 
-1. Put the keys in `config.json`, commit, push to your **private** repo.
-2. Vercel → **Add New → Project** → import the repo. Framework **Other**, leave build/output empty → **Deploy**.
-3. Open `https://your-project.vercel.app`.
+1. Put the keys in `config.json`, commit, push to your **private** repo. `package.json`, `vercel.json`, `api/`, `src/`, `image/` must be in the **root** of the repo.
+2. Vercel → **Add New → Project** → import the repo. Framework preset **Other**. Leave the Build / Output / Install fields as they are - `vercel.json` sets them.
+3. **Deploy**, then open `https://your-project.vercel.app`.
+
+How it works on Vercel: the website files (`src/` + the logo, copied by the build command) are served by Vercel's CDN; only `/api/*` runs as a function (`api/index.js`). So even if the function has a problem, the page still opens and shows an error message instead of a blank 500 page.
 
 > ⚠️ If you ever make the repo **public** (or share the zip), your keys are exposed - delete and recreate them first.
 >
 > Prefer not to commit keys? Add `config.json` to `.gitignore` and set Environment Variables in Vercel instead: `GEMINI_API_KEY`, `GROQ_API_KEY`, `OPENAI_API_KEY`, `OPENROUTER_API_KEY`, `SEARCH_API_KEY` (redeploy after changing).
 
 **Vercel limits:** uploads max ~4 MB (Vercel's 4.5 MB body limit; the app lowers its limit automatically) · files are **temporary** (only `/tmp`, cleared when the function restarts - the Library shows a notice) · rate limits are per instance · streaming works (60 s function limit).
+
+**If Vercel shows `500 FUNCTION_INVOCATION_FAILED`:** open the project in Vercel → **Logs** (or tap *VIEW LOGS* on the error page) and read the first red line - it names the exact problem (for example a missing package or a broken `config.json`).
 
 ### Normal Node host (Render, Railway, VPS, Replit…)
 `npm install && npm start` (`PORT` if required, `NODE_ENV=production`). Keep `trustProxy` at `1` behind a proxy, `false` if directly on the internet. Use HTTPS (live camera needs it) and a persistent disk if uploads must survive restarts.
@@ -208,6 +212,7 @@ Your repo is **private**, so committing `config.json` with your keys is fine - t
 
 | You see | Meaning / fix |
 |---|---|
+| *500 FUNCTION_INVOCATION_FAILED* (Vercel) | The API function crashed. Vercel → Logs shows why. Check `package.json` is in the repo root and `config.json` is valid JSON. |
 | *AI service is not configured yet.* | No key found. Check `config.json` (quotes, commas), key pasted between the quotes, then **restart**. On Vercel: redeploy. |
 | *AI service is not configured correctly.* | The provider rejected the key (wrong, deleted or restricted). Create a new key and replace it. |
 | *The AI service is busy right now.* | Rate limit (429). Wait a minute, or add the second provider as backup. |
