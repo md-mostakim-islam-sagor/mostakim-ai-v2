@@ -9,7 +9,7 @@ One Node.js app (Express), no build step.
 MOSTAKIM-AI/
 ├─ package.json
 ├─ vercel.json        ← Vercel settings
-├─ api/index.js       ← Vercel entry point (loads index.js)
+├─ api/[...path].js   ← Vercel entry point (hands /api/* to index.js)
 ├─ config.json        ← YOUR API KEYS go here (server side only)
 ├─ config.js          ← loads config.json / environment variables
 ├─ index.js           ← backend (API, uploads, ZIP, AI providers)
@@ -190,10 +190,10 @@ Rate limits per IP/minute (configurable): 180 general · 20 chat/search · 30 up
 Your repo is **private**, so committing `config.json` with your keys is fine - the function reads it on Vercel too.
 
 1. Put the keys in `config.json`, commit, push to your **private** repo. `package.json`, `vercel.json`, `api/`, `src/`, `image/` must be in the **root** of the repo.
-2. Vercel → **Add New → Project** → import the repo. Framework preset **Other**. Leave the Build / Output / Install fields as they are - `vercel.json` sets them.
+2. Vercel → **Add New → Project** → import the repo. Framework preset **Other** (it is forced by `vercel.json` anyway). Leave the Build / Output / Install fields as they are - `vercel.json` sets them.
 3. **Deploy**, then open `https://your-project.vercel.app`.
 
-How it works on Vercel: the website files (`src/` + the logo, copied by the build command) are served by Vercel's CDN; only `/api/*` runs as a function (`api/index.js`). So even if the function has a problem, the page still opens and shows an error message instead of a blank 500 page.
+How it works on Vercel: `vercel.json` sets `"framework": null`, so Vercel does **not** treat the project as a generic Express backend. The website files (`src/` + the logo, copied by the build command) are served by Vercel's CDN; only `/api/*` runs as a function (`api/[...path].js`, which loads the Express app from `index.js`). So even if the function has a problem, the page still opens and shows an error message instead of a blank 500 page.
 
 > ⚠️ If you ever make the repo **public** (or share the zip), your keys are exposed - delete and recreate them first.
 >
@@ -212,6 +212,7 @@ How it works on Vercel: the website files (`src/` + the logo, copied by the buil
 
 | You see | Meaning / fix |
 |---|---|
+| *No entrypoint found in output directory* (Vercel build) | Old `vercel.json`. Use the new one with `"framework": null`. |
 | *500 FUNCTION_INVOCATION_FAILED* (Vercel) | The API function crashed. Vercel → Logs shows why. Check `package.json` is in the repo root and `config.json` is valid JSON. |
 | *AI service is not configured yet.* | No key found. Check `config.json` (quotes, commas), key pasted between the quotes, then **restart**. On Vercel: redeploy. |
 | *AI service is not configured correctly.* | The provider rejected the key (wrong, deleted or restricted). Create a new key and replace it. |

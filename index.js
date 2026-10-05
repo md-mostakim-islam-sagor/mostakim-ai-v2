@@ -1,5 +1,10 @@
 'use strict';
 
+/**
+ * MOSTAKIM AI - backend
+ * Express server: static frontend, AI chat, web search, uploads, ZIP extraction, media library.
+ * Provider API keys live in config.json / environment variables and never reach the browser.
+ */
 
 const fs = require('fs');
 const fsp = fs.promises;
@@ -1619,11 +1624,13 @@ function start() {
 
 if (require.main === module) start();
 
-module.exports = {
-  app,
-  start,
-  // exported for tests
-  _internals: {
+// The module exports the Express app itself, so hosts that expect an exported app (Vercel) work
+// with `require('./index.js')`. Start/test helpers hang off it as properties.
+module.exports = app;
+module.exports.app = app;
+module.exports.start = start;
+// exported for tests
+module.exports._internals = {
     sanitizeName,
     sniffKinds,
     extractZip,
@@ -1652,5 +1659,4 @@ module.exports = {
     TYPES,
     UPLOAD_DIR,
     TEMP_DIR
-  }
-};
+  };

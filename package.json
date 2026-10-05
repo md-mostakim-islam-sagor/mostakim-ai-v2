@@ -7,7 +7,7 @@
   "license": "MIT",
   "author": "MOSTAKIM LAB'S",
   "engines": {
-    "node": ">=20.12.0"
+    "node": "22.x"
   },
   "scripts": {
     "start": "node index.js",
